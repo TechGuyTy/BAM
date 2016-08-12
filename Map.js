@@ -94,18 +94,14 @@ $(function() {
         }
     }
 
-    function removeMarker() {
-      
 
-
-    }
 
     function addToSide(marker) {
         var sideDiv = $('#sideDiv');
         document.getElementById('sideDiv').innerHTML = '';
         sideDiv.append('<ul>');
         for (var i in allMarkers) {
-            var newPort = $('<li onclick="removeMarker()">' + allMarkers[i].title + '</li>');
+            var newPort = $('<li><span onclick="removeMarker(allMarkers['+ i +'] )">' + allMarkers[i].title + '</span><span id="'+allMarkers[i].code+'" onclick="zoomPoint(allMarkers['+ i +'])">FIND</span></li>');
             sideDiv.append(newPort);
         }
         sideDiv.append('</ul>');
@@ -127,14 +123,34 @@ $(function() {
 
 });
 // panTo(latLng:currAirport.Latitude, currAirport.Longitude);
+function zoomPoint(point){
+  globalMap.setCenter(point.position);
 
+// $("#sideDiv").on("click", "#" + point.code + "", function() {
+//         var laLatLng = new google.maps.LatLng(point.position);
+//         console.log(laLatLng);
+//         globalMap.panTo(laLatLng);
+//         globalMap.setZoom(5);
+//      });
+   }
+
+
+
+function removeMarker(marker) {
+  console.dir(marker);
+  for (i=0; i< allMarkers.length; i++) {
+    if (marker == marker) {
+      marker.setMap(null);
+    }
+  }
+  };
 
 
 function clearMarkers() {
     allMarkers.forEach(function(element, index, array) {
         element.setMap(null);
     });
-    document.getElementById('sideDiv').innerHTML = '';
+    $('#sideDiv').empty();
 
 
     allMarkers = [];
