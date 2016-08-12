@@ -55,6 +55,11 @@
             </p>
         </div>
     </div>
+    <div class="heading-div">
+      <p>
+        After modifying the example code, these are some of the features I want to highlight. I have all of the selected markers being listed within a div on the side so that it's unobtrusive for the user. Within that side div there is the name of the Airport for identification and the option of deleting that saved marker or finding it quickly on a map. When a user clicks on the marker, a window pops up that displays all of the information in a more intuitive manner.
+      </p>
+    </div>
     <div id="airport-controls">
         Airports:
         <select id="airport-list">
@@ -62,8 +67,10 @@
     </div>
     <div id="map" style="float:left">
     </div>
+    <div id="test" onclick="clearMarkers()">
+      [Clear All Markers] </div>
     <div id="sideDiv" style="border:2px solid black">
-        BOX!
+      <p>Your selected airports will be displayed here!</p>
     </div>
 
     <div id="airport-data">
@@ -88,8 +95,6 @@
             </div>
         </div>
     </div>
-    <div id="test" onclick="clearMarkers()">
-        Clear Markers </div>
 </body>
 
 </html>

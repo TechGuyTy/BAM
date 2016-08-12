@@ -1,7 +1,7 @@
 var globalMap;
-
+//array created to hold all Marker objects
 var allMarkers = [];
-
+//array to hold all JSON objects for future use.
 var objArray = [];
 
 var getMarkerUniqueId = function(lat, lng) {
@@ -27,11 +27,6 @@ $(function() {
                 }
                 objArray.push(obj);
             }
-
-            for (var i in objArray) {
-                // console.log(objArray[i].Code)
-            }
-
             for (var i in sites) {
                 var newOption = $('<option value="' + sites[i].Code + '">' + sites[i].Code + '</option>');
                 airportList.append(newOption);
@@ -74,19 +69,21 @@ $(function() {
                 $('#setting-lat').text(currAirport.Latitude);
                 $('#setting-long').text(currAirport.Longitude);
             }
-
+//unique marker id generated from the coordinates for future ability to add sites on click
             var markerId = getMarkerUniqueId(currAirport.Latitude, currAirport.Longitude);
             var marker = new google.maps.Marker({
                 position: {
                     lat: currAirport.Latitude,
                     lng: currAirport.Longitude
                 },
+                code: currAirport.code,
                 map: globalMap,
                 id: 'marker_' + markerId,
                 title: trimName(currAirport)
             });
             allMarkers.push(marker);
             addToSide(marker);
+            toggleInfo(currAirport, marker)
             marker.addListener('click', function() {
                 toggleInfo(currAirport, marker);
             });
@@ -96,12 +93,13 @@ $(function() {
 
 
 
+//places list of airports in a more user friendly manner on the side.
     function addToSide(marker) {
         var sideDiv = $('#sideDiv');
         document.getElementById('sideDiv').innerHTML = '';
         sideDiv.append('<ul>');
         for (var i in allMarkers) {
-            var newPort = $('<li id= "id"  ><span onclick="removeMarker(allMarkers[' + i + '] )">' + allMarkers[i].title + '</span><span id="' + allMarkers[i].code + '" onclick="zoomPoint(allMarkers[' + i + '])">FIND</span></li>');
+            var newPort = $('<li id="'+ allMarkers[i].id +'">' + allMarkers[i].title + ' <span onclick="removeMarker(allMarkers[' + i + '] )">  DEL  </span><span id="' + allMarkers[i].code + '" onclick="zoomPoint(allMarkers[' + i + '])">FIND</span></li>');
             sideDiv.append(newPort);
         }
         sideDiv.append('</ul>');
@@ -126,17 +124,13 @@ $(function() {
 function zoomPoint(point) {
     globalMap.setCenter(point.position);
 }
-
-
-
 function removeMarker(marker) {
-    console.dir(marker);
     for (i = 0; i < allMarkers.length; i++) {
         if (marker == marker) {
             marker.setMap(null);
         }
 
-        var elem = document.getElementById('id');
+        var elem = document.getElementById(marker.id);
         elem.parentNode.removeChild(elem);
 
         var code = $('#' + marker.id);
@@ -144,19 +138,14 @@ function removeMarker(marker) {
         document.getElementById('code').innerHTML = "";
     }
 };
-
-
 function clearMarkers() {
     allMarkers.forEach(function(element, index, array) {
         element.setMap(null);
     });
     $('#sideDiv').empty();
 
-
     allMarkers = [];
-
 }
-
 //function created to remove the first 12 letters of the Full site name.
 function trimName(currAirport) {
     var n = (currAirport.FullSiteName).slice(12);
@@ -164,22 +153,25 @@ function trimName(currAirport) {
     return n;
 }
 
+//ui removal of markers
 function toggleInfo(currAirport, marker) {
 
     var contentString =
         '<div id="content">' +
-        '<div id="siteNotice"></div>' +
+        '<h1>' + trimName(currAirport) + '</h1>' +
         '<p>Code:' + (currAirport.Code) + '</p>' +
-        '<p>City:' + (currAirport.City) + '</p>' +
-        '<p>State:' + (currAirport.State) + '</p>' +
-        '<p>Full Site Name:' + trimName(currAirport) + '</p>' +
-        '<p>Coordinates:' + (currAirport.Latitude) + ',' + (currAirport.Longitude) + '</p>' +
+        '<p>City: ' + (currAirport.City) + ', ' +
+        (currAirport.State) + '</p>' +
+        '<p>Coordinates: ' + (currAirport.Latitude) + ', ' + (currAirport.Longitude) + '</p>' +
         '</div>';
 
 
 
     var infowindow = new google.maps.InfoWindow({
         content: contentString
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map, marker);
     });
     infowindow.open(map, marker);
 }
