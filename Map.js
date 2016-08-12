@@ -101,7 +101,7 @@ $(function() {
         document.getElementById('sideDiv').innerHTML = '';
         sideDiv.append('<ul>');
         for (var i in allMarkers) {
-            var newPort = $('<li><span onclick="removeMarker(allMarkers['+ i +'] )">' + allMarkers[i].title + '</span><span id="'+allMarkers[i].code+'" onclick="zoomPoint(allMarkers['+ i +'])">FIND</span></li>');
+            var newPort = $('<li id= "id"  ><span onclick="removeMarker(allMarkers[' + i + '] )">' + allMarkers[i].title + '</span><span id="' + allMarkers[i].code + '" onclick="zoomPoint(allMarkers[' + i + '])">FIND</span></li>');
             sideDiv.append(newPort);
         }
         sideDiv.append('</ul>');
@@ -122,28 +122,28 @@ $(function() {
     });
 
 });
-// panTo(latLng:currAirport.Latitude, currAirport.Longitude);
-function zoomPoint(point){
-  globalMap.setCenter(point.position);
 
-// $("#sideDiv").on("click", "#" + point.code + "", function() {
-//         var laLatLng = new google.maps.LatLng(point.position);
-//         console.log(laLatLng);
-//         globalMap.panTo(laLatLng);
-//         globalMap.setZoom(5);
-//      });
-   }
+function zoomPoint(point) {
+    globalMap.setCenter(point.position);
+}
 
 
 
 function removeMarker(marker) {
-  console.dir(marker);
-  for (i=0; i< allMarkers.length; i++) {
-    if (marker == marker) {
-      marker.setMap(null);
+    console.dir(marker);
+    for (i = 0; i < allMarkers.length; i++) {
+        if (marker == marker) {
+            marker.setMap(null);
+        }
+
+        var elem = document.getElementById('id');
+        elem.parentNode.removeChild(elem);
+
+        var code = $('#' + marker.id);
+        console.log(code);
+        document.getElementById('code').innerHTML = "";
     }
-  }
-  };
+};
 
 
 function clearMarkers() {
